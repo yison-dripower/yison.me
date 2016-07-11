@@ -11,7 +11,7 @@ a:hover {
     transition: 0.1s;
 }
 header {
-	font-family: "Tekton Pro", arial;
+	font-family: "Tekton Bold", arial;
 	font-size: 28px;
 	color: #333;
 	margin-top: 25px;
@@ -36,4 +36,8 @@ nav a.active {
 #articles {
 	margin-top: 40px;
 	padding-left: 50px;
+}
+@font-face {
+  font-family: "Tekton Bold";
+  src: url('../fonts/Tekton-bold.otf');
 }

@@ -1,0 +1,1 @@
+# Implicit -> Function VS Method

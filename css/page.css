@@ -29,6 +29,10 @@ article {
 .markdown-body {
 	font: 300 100%/1.75 'Helvetica Neue', Helvetica, 'Lantinghei SC', 'Hiragino Sans GB', sans-serif;
 	color: #505050;
+  letter-spacing: 1px;
+}
+.markdown-body img {
+  max-width: 100%;
 }
 h1 {
     color: #ED1F24;

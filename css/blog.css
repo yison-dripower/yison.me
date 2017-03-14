@@ -47,6 +47,7 @@ h2 {
 	list-style: none;
 }
 #articles .inactive a {
+	color: #999;
 	cursor: default;
 }
 @font-face {

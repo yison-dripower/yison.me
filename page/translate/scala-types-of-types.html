@@ -1,0 +1,103 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>html {
+	background: #ddd;
+}
+body {
+	outline: none;
+	border: none;
+	font: 300 100%/1.75 'Helvetica Neue', Helvetica, 'Lantinghei SC', 'Hiragino Sans GB', sans-serif;
+}
+a {
+	text-decoration: none;
+	color: #3466CC;
+	cursor: pointer;
+}
+a:hover {
+    color: #ed282d;
+    transition: 0.1s;
+}
+article {
+	margin:0 auto;
+	max-width: 620px;
+	padding: 60px 80px;
+    -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, .12);
+    -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, .12);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .12);
+    background: #fff;
+    margin-top: 30px;
+    border-radius: 3px;
+}
+.markdown-body {
+	font: 300 100%/1.75 'Helvetica Neue', Helvetica, 'Lantinghei SC', 'Hiragino Sans GB', sans-serif;
+	color: #505050;
+  letter-spacing: 1px;
+}
+.markdown-body img {
+  max-width: 100%;
+}
+h1 {
+    color: #ED1F24;
+    line-height: 36px;
+    margin: 20px 0;
+    text-align: center;
+	font-weight: normal;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 30px;
+}
+center {
+	color: #999;
+}
+center a {
+	color: #444;
+}
+hr {
+	border: 0;
+	background-color: #e0e0e0;
+	height: 1px;
+	margin-bottom: 60px;
+}
+code {
+  background: #f2f2f2;
+  display: block;
+  padding: 15px;
+}</style><title>scala-types-of-types</title></head><body><article class="markdown-body"><h1 id="scala"><a name="user-content-scala" href="#scala" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Scala 类型的类型</h1>
+<hr />
+<h2 id="_1"><a name="user-content-_1" href="#_1" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>原文</h2>
+<p><a href="http://ktoso.github.io/scala-types-of-types/"><a href="http://ktoso.github.io/scala-types-of-types/"><a href="http://ktoso.github.io/scala-types-of-types/">http://ktoso.github.io/scala-types-of-types/</a></a></a></p>
+<h2 id="_2"><a name="user-content-_2" href="#_2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>翻译</h2>
+<h3 id="1-scala"><a name="user-content-1-scala" href="#1-scala" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>1. Scala 类型的不同类型</h3>
+<p>2013 年在几场 「JavaOne 大会」之后，掀起了一些关于 「Scala 类型」方面的热议，这篇博文也应运而生。  </p>
+<p>在这些讨论声中，我发现不同的人在学习 Scala 的过程中，经常重复提出相同的问题。虽然我们并不能穷举所有跟 Scala 类型打交道的妙招，但我依然决定总结自己已有的经验，分享下在 Scala 中为什么我们需要这些类型。</p>
+<h3 id="2"><a name="user-content-2" href="#2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>2. 写作进度</h3>
+<p>尽管我写这篇文章已经有段时间了，但始终还有很多内容未完成。比如说「高阶类型」部分需要重新梳理，「Self Type」还得补充更多细节，等等等等。详情参见「计划清单」。</p>
+<p>此外，如果你看到某个部分被打上了 ❌ ，则表示该部分需要修改或者是未完成。</p>
+<h3 id="3-type-ascription"><a name="user-content-3-type-ascription" href="#3-type-ascription" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3. Type Ascription</h3>
+<p>Scala 有「类型推断」，这意味着我们可以在源码中省略一些「类型声明」。在不显式声明类型的前提下，我们只要书写 val 或 def 就够了。</p>
+<p>这种显式表明类型的行为，被称为「Type Ascription」（有时候，也被叫做「Type Annotation」，但这个名字容易造成混淆，在 Scala 中并不采纳使用）。</p>
+<pre><code class="scala">trait Thing
+def getThing = new Thing { }
+
+// without Type Ascription, the type is infered to be `Thing`
+val infered = getThing
+
+// with Type Ascription
+val thing: Thing = getThing
+</code></pre>
+
+<p>在此类情况下，我们可以不使用「Type Ascription」。当然你也可以针对每个公有的方法显示声明返回类型（这是非常好的习惯），这可以让代码可读性更好。</p>
+<p>你可以根据以下的提示问题，来决定是否使用「Type Ascription」：</p>
+<p>Q: 如果它是一个变量？<br />
+<pre><code>A: 必须使用。
+</code></pre></p>
+<p>Q: 如果它是一个公有方法的返回值？<br />
+<pre><code>A: 为了更好的代码可读性及控制输出类型，需要使用。
+</code></pre></p>
+<p>Q: 如果它是一个递归或重载的方法？<br />
+<pre><code>A: 必须使用。
+</code></pre></p>
+<p>Q: 当你需要返回一个比隐式推断结果更通用的接口？<br />
+<pre><code>A: 除非你愿意暴露实现细节，否则必须使用。
+</code></pre></p>
+<p>除上述情况之外，则可以不必显式声明类型。</p>
+<p>补充提示：使用「Type Ascriptions」可以加快编译的速度，同时能看到一个方法的返回类型，通常也都是一件好事。</p>
+<p>好了，我们现在明白了「Type Ascriptions」大概是怎么一回事。讲完这个之后，我们继续接下来的话题，类型随之也会变得越来越有趣。</p>
+<h3 id="4-any-anyref-anyval"><a name="user-content-4-any-anyref-anyval" href="#4-any-anyref-anyval" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4. 通用类型系统 — Any, AnyRef, AnyVal</h3></article></body></html>

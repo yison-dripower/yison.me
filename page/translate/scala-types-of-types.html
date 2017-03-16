@@ -51,14 +51,25 @@ center a {
 }
 hr {
 	border: 0;
-	background-color: #e0e0e0;
+	background-color: #f8f8f8;
 	height: 1px;
 	margin-bottom: 60px;
 }
 code {
-  background: #f2f2f2;
+  margin: 0 2px;
+  padding: 0px 5px;
+  border: 1px solid #ddd;
+  background-color: #eee;
+  border-radius: 3px;
+}
+pre code {
+  margin: 0;
   display: block;
   padding: 15px;
+  border: none;
+  border-radius: 0;
+  overflow-x: scroll;
+  letter-spacing: 0;
 }</style><title>scala-types-of-types</title></head><body><article class="markdown-body"><h1 id="scala"><a name="user-content-scala" href="#scala" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Scala 类型的类型</h1>
 <hr />
 <h2 id="_1"><a name="user-content-_1" href="#_1" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>原文</h2>
@@ -100,4 +111,29 @@ val thing: Thing = getThing
 <p>除上述情况之外，则可以不必显式声明类型。</p>
 <p>补充提示：使用「Type Ascriptions」可以加快编译的速度，同时能看到一个方法的返回类型，通常也都是一件好事。</p>
 <p>好了，我们现在明白了「Type Ascriptions」大概是怎么一回事。讲完这个之后，我们继续接下来的话题，类型随之也会变得越来越有趣。</p>
-<h3 id="4-any-anyref-anyval"><a name="user-content-4-any-anyref-anyval" href="#4-any-anyref-anyval" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4. 通用类型系统 — Any, AnyRef, AnyVal</h3></article></body></html>
+<h3 id="4-any-anyref-anyval"><a name="user-content-4-any-anyref-anyval" href="#4-any-anyref-anyval" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4. 通用类型系统 — Any, AnyRef, AnyVal</h3>
+<p>我们之所以说 Scala 的类型系统是通用的，是因为有一个「顶类型」— Any。这与 Java 很不一样，后者存在叫做「基本数据类型」 ( <code>int</code> , <code>long</code> , <code>float</code> , <code>double</code> , <code>byte</code> , <code>char</code> , <code>short</code> , <code>boolean</code> ) 的特例，它们并不继承 Java 中类似「顶类型」的东西<code>java.lang.Object</code>。</p>
+<p><center><br />
+  <img src="http://ktoso.github.io/scala-types-of-types/assets/img/scala-types.png" /><br />
+</center></p>
+<p>Scala 引入了 <code>Any</code> 作为所有类型共同的顶类型。<code>Any</code> 是 <code>AnyRef</code> 和 <code>AnyVal</code> 的父类。</p>
+<p><code>AnyRef</code> 面向 Java（JVM）的对象世界，它对应 <code>java.lang.Object</code> ，是所有对象的超类。</p>
+<p><code>AnyVal</code> 则代表了 Java 的值世界，例如 <code>int</code> 以及其他 JVM 基本数据类型。</p>
+<p>正是依赖这种继承设计，我们才能够使用 <code>Any</code> 定义方法，同时兼容 <code>scala.int</code> 以及 <code>java.lang.String</code> 实例。</p>
+<pre><code class="scala">class Person
+
+val allThings = ArrayBuffer[Any]()
+
+val myInt = 42             // Int, kept as low-level `int` during runtime
+
+allThings += myInt         // Int (extends AnyVal)
+                           // has to be boxed (!) -&gt; becomes java.lang.Integer in the collection (!)
+
+allThings += new Person()  // Person (extends AnyRef), no magic here
+</code></pre>
+
+<p>虽然在 JVM 层一旦遭遇 <code>ArrayBuffer[Any]</code>，我们的 Int 实例就会被打包成对象。对于类型系统而言，这一切还算是透明的。我们可以通过「 Scala REPL」和 <code>:javap</code> 来调查下上述的例子，这样子可以找到我们的测试类产生的代码。</p>
+<pre><code>35: invokevirtual #47  // Method myInt:()I
+38: invokestatic  #53  // Method scala/runtime/BoxesRunTime.boxToInteger:(I)Ljava/lang/Integer;
+41: invokevirtual #57  // Method scala/collection/mutable/ArrayBuffer.$plus$eq:(Ljava/lang/Object;)Lscala/collection/mutable/ArrayBuffer;
+</code></pre></article></body></html>

@@ -69,6 +69,40 @@ A: 除非你愿意暴露实现细节，否则必须使用。
 
 ### 4. 通用类型系统 — Any, AnyRef, AnyVal
 
+我们之所以说 Scala 的类型系统是通用的，是因为有一个「顶类型」— Any。这与 Java 很不一样，后者存在叫做「基本数据类型」 ( ``int`` , ``long`` , ``float`` , ``double`` , ``byte`` , ``char`` , ``short`` , ``boolean`` ) 的特例，它们并不继承 Java 中类似「顶类型」的东西``java.lang.Object``。
+
+<center>
+  <img src="http://ktoso.github.io/scala-types-of-types/assets/img/scala-types.png" />
+</center>
+
+Scala 引入了 ``Any`` 作为所有类型共同的顶类型。``Any`` 是 ``AnyRef`` 和 ``AnyVal`` 的父类。
+
+``AnyRef`` 面向 Java（JVM）的对象世界，它对应 ``java.lang.Object`` ，是所有对象的超类。
+
+``AnyVal`` 则代表了 Java 的值世界，例如 ``int`` 以及其他 JVM 基本数据类型。
+
+正是依赖这种继承设计，我们才能够使用 ``Any`` 定义方法，同时兼容 ``scala.int`` 以及 ``java.lang.String`` 实例。
+
+```scala
+class Person
+
+val allThings = ArrayBuffer[Any]()
+
+val myInt = 42             // Int, kept as low-level `int` during runtime
+
+allThings += myInt         // Int (extends AnyVal)
+                           // has to be boxed (!) -> becomes java.lang.Integer in the collection (!)
+
+allThings += new Person()  // Person (extends AnyRef), no magic here
+```
+
+虽然在 JVM 层一旦遭遇 ``ArrayBuffer[Any]``，我们的 Int 实例就会被打包成对象。对于类型系统而言，这一切还算是透明的。我们可以通过「 Scala REPL」和 ``:javap`` 来调查下上述的例子，这样子可以找到我们的测试类产生的代码。
+
+```
+35: invokevirtual #47  // Method myInt:()I
+38: invokestatic  #53  // Method scala/runtime/BoxesRunTime.boxToInteger:(I)Ljava/lang/Integer;
+41: invokevirtual #57  // Method scala/collection/mutable/ArrayBuffer.$plus$eq:(Ljava/lang/Object;)Lscala/collection/mutable/ArrayBuffer;
+```
 
 
 

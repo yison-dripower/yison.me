@@ -70,18 +70,33 @@ pre code {
   border-radius: 0;
   overflow-x: scroll;
   letter-spacing: 0;
-}</style><title>scala-types-of-types</title></head><body><article class="markdown-body"><h1 id="scala"><a name="user-content-scala" href="#scala" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Scala 类型的类型</h1>
+  border: 1px solid #ddd;
+}
+blockquote {
+  border-left: 4px solid #ED1F24;
+  background: #eee;
+  margin: 0;
+  padding: 10px 25px;
+  font-size: 12px;
+}</style><title>part-1</title></head><body><article class="markdown-body"><h1 id="scala"><a name="user-content-scala" href="#scala" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Scala 类型的类型</h1>
 <hr />
 <h2 id="_1"><a name="user-content-_1" href="#_1" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>原文</h2>
 <p><a href="http://ktoso.github.io/scala-types-of-types/"><a href="http://ktoso.github.io/scala-types-of-types/"><a href="http://ktoso.github.io/scala-types-of-types/">http://ktoso.github.io/scala-types-of-types/</a></a></a></p>
-<h2 id="_2"><a name="user-content-_2" href="#_2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>翻译</h2>
-<h3 id="1-scala"><a name="user-content-1-scala" href="#1-scala" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>1. Scala 类型的不同类型</h3>
+<h2 id="_2"><a name="user-content-_2" href="#_2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>目录</h2>
+<ul>
+<li><a href="#1-scala">1. Scala 类型的不同类型</a></li>
+<li><a href="#2">2. 写作进度</a></li>
+<li><a href="#3-type-ascription">3. Type Ascription</a></li>
+<li><a href="#4-any-anyref-anyval">4. 通用类型系统 — Any, AnyRef, AnyVal</a></li>
+<li><a href="#5-nothing-null">5. 底类型 - Nothing 与 Null</a></li>
+</ul>
+<h2 id="1-scala"><a name="user-content-1-scala" href="#1-scala" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>1. Scala 类型的不同类型</h2>
 <p>2013 年在几场 「JavaOne 大会」之后，掀起了一些关于 「Scala 类型」方面的热议，这篇博文也应运而生。  </p>
 <p>在这些讨论声中，我发现不同的人在学习 Scala 的过程中，经常重复提出相同的问题。虽然我们并不能穷举所有跟 Scala 类型打交道的妙招，但我依然决定总结自己已有的经验，分享下在 Scala 中为什么我们需要这些类型。</p>
-<h3 id="2"><a name="user-content-2" href="#2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>2. 写作进度</h3>
+<h2 id="2"><a name="user-content-2" href="#2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>2. 写作进度</h2>
 <p>尽管我写这篇文章已经有段时间了，但始终还有很多内容未完成。比如说「高阶类型」部分需要重新梳理，「Self Type」还得补充更多细节，等等等等。详情参见「计划清单」。</p>
 <p>此外，如果你看到某个部分被打上了 ❌ ，则表示该部分需要修改或者是未完成。</p>
-<h3 id="3-type-ascription"><a name="user-content-3-type-ascription" href="#3-type-ascription" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3. Type Ascription</h3>
+<h2 id="3-type-ascription"><a name="user-content-3-type-ascription" href="#3-type-ascription" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3. Type Ascription</h2>
 <p>Scala 有「类型推断」，这意味着我们可以在源码中省略一些「类型声明」。在不显式声明类型的前提下，我们只要书写 val 或 def 就够了。</p>
 <p>这种显式表明类型的行为，被称为「Type Ascription」（有时候，也被叫做「Type Annotation」，但这个名字容易造成混淆，在 Scala 中并不采纳使用）。</p>
 <pre><code class="scala">trait Thing
@@ -111,7 +126,7 @@ val thing: Thing = getThing
 <p>除上述情况之外，则可以不必显式声明类型。</p>
 <p>补充提示：使用「Type Ascriptions」可以加快编译的速度，同时能看到一个方法的返回类型，通常也都是一件好事。</p>
 <p>好了，我们现在明白了「Type Ascriptions」大概是怎么一回事。讲完这个之后，我们继续接下来的话题，类型随之也会变得越来越有趣。</p>
-<h3 id="4-any-anyref-anyval"><a name="user-content-4-any-anyref-anyval" href="#4-any-anyref-anyval" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4. 通用类型系统 — Any, AnyRef, AnyVal</h3>
+<h2 id="4-any-anyref-anyval"><a name="user-content-4-any-anyref-anyval" href="#4-any-anyref-anyval" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4. 通用类型系统 — Any, AnyRef, AnyVal</h2>
 <p>我们之所以说 Scala 的类型系统是通用的，是因为有一个「顶类型」— Any。这与 Java 很不一样，后者存在叫做「基本数据类型」 ( <code>int</code> , <code>long</code> , <code>float</code> , <code>double</code> , <code>byte</code> , <code>char</code> , <code>short</code> , <code>boolean</code> ) 的特例，它们并不继承 Java 中类似「顶类型」的东西<code>java.lang.Object</code>。</p>
 <p><center><br />
   <img src="http://ktoso.github.io/scala-types-of-types/assets/img/scala-types.png" /><br />
@@ -136,4 +151,33 @@ allThings += new Person()  // Person (extends AnyRef), no magic here
 <pre><code>35: invokevirtual #47  // Method myInt:()I
 38: invokestatic  #53  // Method scala/runtime/BoxesRunTime.boxToInteger:(I)Ljava/lang/Integer;
 41: invokevirtual #57  // Method scala/collection/mutable/ArrayBuffer.$plus$eq:(Ljava/lang/Object;)Lscala/collection/mutable/ArrayBuffer;
-</code></pre></article></body></html>
+</code></pre>
+
+<p>你将注意到 <code>myInt</code> 起初还是携带一个原始 <code>int</code> 类型的值。然后，在它即将被添加到 ArrayBuffer 的时候，scalac 植入了一个方法 <code>BoxesRunTime.boxToInteger:(I)Ljava/lang/Integer</code> （提醒下不是经常跟 <code>bytecode</code> 打交道的读者，这个方法就是 <code>public Integer boxToInteger(i: int)</code>）。</p>
+<p>通过这么一个智能的编译器，以及在这套公共继承体系中将所有东西都当成一个对象来处理，我们就能够摆脱「基本数据类型」这种边缘情况的纠缠，至少在我们的 Scala 源码中，编译器会为我们处理它。</p>
+<p>当然在 JVM 层面，这种差异依旧存在。由于「基本数据类型」的操作更安全，同时占用更少的内存（对象明显要占用更多），scalac 会在尽可能的情况下使用「基本数据类型」。</p>
+<p>另一方面，我们也可以限制一个方法只能采用「轻量级」的值类型：<br />
+<pre><code class="scala">def check(in: AnyVal) = ()
+
+check(42)    // Int -&gt; AnyVal
+check(13.37) // Double -&gt; AnyVal
+
+check(new Object) // -&gt; AnyRef = fails to compile
+</code></pre></p>
+<p>在上述例子中，我们使用了一个 TypeClass <code>Checker[T]</code> 与「Type Bound」（后续会详谈）。总体思路就是这个方法只能采用「Value Classes」，如 Int 或我们自己的值类型。虽然这不是惯用的方法，但这展示了 Scala 的类型系统如何拥抱 java 的基本数据类型，把它们引入到真正的类型系统里面，而不是像 Java 一样，仅仅将它们作为一个分离的情况存在。</p>
+<h2 id="5-nothing-null"><a name="user-content-5-nothing-null" href="#5-nothing-null" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>5. 底类型 - Nothing 与 Null</h2>
+<p>在 Scala 中，一切皆有类型…… 但你是否想过，当遇到一些非正常的情况，比如抛出异常的时候，类型推断是如何保持正常运转，推断出「sound」类型的。</p>
+<p>让我们通过以下的「if/else throw」的例子来一探究竟：<br />
+<pre><code class="scala">val thing: Int =
+  if (test)
+    42                             // : Int
+  else
+    throw new Exception(&quot;Whoops!&quot;) // : Nothing
+</code></pre></p>
+<p>正如你在注释里所看到的，if 块的返回类型是 <code>Int</code>（很明显），else 代码块的类型是 <code>Nothing</code>（有点意思）。推断器之所以能够推断 Thing 的类型将永远是 <code>Int</code>，主要是 <code>Nothing</code> 类型的「底类型」性质在起作用。</p>
+<blockquote>
+<p>一个关于「底类型」如何运作的准确直觉是：<code>Nothing</code> 继承了所有类型。</p>
+</blockquote>
+<p>……</p>
+<h2 id="_3"><a name="user-content-_3" href="#_3" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>下一篇</h2>
+<p><a href="/page/scala-types-of-types/part-2">Scala 类型的类型（二）</a></p></article></body></html>

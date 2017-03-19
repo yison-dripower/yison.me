@@ -6,21 +6,27 @@
 
 [http://ktoso.github.io/scala-types-of-types/](http://ktoso.github.io/scala-types-of-types/)
 
-## 翻译
+## 目录
 
-### 1. Scala 类型的不同类型
+- [1. Scala 类型的不同类型](#1-scala)
+- [2. 写作进度](#2)
+- [3. Type Ascription](#3-type-ascription)
+- [4. 通用类型系统 — Any, AnyRef, AnyVal](#4-any-anyref-anyval)
+- [5. 底类型 - Nothing 与 Null](#5-nothing-null)
+
+## 1. Scala 类型的不同类型
 
 2013 年在几场 「JavaOne 大会」之后，掀起了一些关于 「Scala 类型」方面的热议，这篇博文也应运而生。  
 
 在这些讨论声中，我发现不同的人在学习 Scala 的过程中，经常重复提出相同的问题。虽然我们并不能穷举所有跟 Scala 类型打交道的妙招，但我依然决定总结自己已有的经验，分享下在 Scala 中为什么我们需要这些类型。
 
-### 2. 写作进度
+## 2. 写作进度
 
 尽管我写这篇文章已经有段时间了，但始终还有很多内容未完成。比如说「高阶类型」部分需要重新梳理，「Self Type」还得补充更多细节，等等等等。详情参见「计划清单」。
 
 此外，如果你看到某个部分被打上了 ❌ ，则表示该部分需要修改或者是未完成。
 
-### 3. Type Ascription
+## 3. Type Ascription
 
 Scala 有「类型推断」，这意味着我们可以在源码中省略一些「类型声明」。在不显式声明类型的前提下，我们只要书写 val 或 def 就够了。
 
@@ -67,7 +73,7 @@ A: 除非你愿意暴露实现细节，否则必须使用。
 
 好了，我们现在明白了「Type Ascriptions」大概是怎么一回事。讲完这个之后，我们继续接下来的话题，类型随之也会变得越来越有趣。
 
-### 4. 通用类型系统 — Any, AnyRef, AnyVal
+## 4. 通用类型系统 — Any, AnyRef, AnyVal
 
 我们之所以说 Scala 的类型系统是通用的，是因为有一个「顶类型」— Any。这与 Java 很不一样，后者存在叫做「基本数据类型」 ( ``int`` , ``long`` , ``float`` , ``double`` , ``byte`` , ``char`` , ``short`` , ``boolean`` ) 的特例，它们并不继承 Java 中类似「顶类型」的东西``java.lang.Object``。
 
@@ -104,5 +110,43 @@ allThings += new Person()  // Person (extends AnyRef), no magic here
 41: invokevirtual #57  // Method scala/collection/mutable/ArrayBuffer.$plus$eq:(Ljava/lang/Object;)Lscala/collection/mutable/ArrayBuffer;
 ```
 
+你将注意到 ``myInt`` 起初还是携带一个原始 ``int`` 类型的值。然后，在它即将被添加到 ArrayBuffer 的时候，scalac 植入了一个方法 ``BoxesRunTime.boxToInteger:(I)Ljava/lang/Integer`` （提醒下不是经常跟 ``bytecode`` 打交道的读者，这个方法就是 ``public Integer boxToInteger(i: int)``）。
 
+通过这么一个智能的编译器，以及在这套公共继承体系中将所有东西都当成一个对象来处理，我们就能够摆脱「基本数据类型」这种边缘情况的纠缠，至少在我们的 Scala 源码中，编译器会为我们处理它。
 
+当然在 JVM 层面，这种差异依旧存在。由于「基本数据类型」的操作更安全，同时占用更少的内存（对象明显要占用更多），scalac 会在尽可能的情况下使用「基本数据类型」。
+
+另一方面，我们也可以限制一个方法只能采用「轻量级」的值类型：
+```scala
+def check(in: AnyVal) = ()
+
+check(42)    // Int -> AnyVal
+check(13.37) // Double -> AnyVal
+
+check(new Object) // -> AnyRef = fails to compile
+```
+
+在上述例子中，我们使用了一个 TypeClass ``Checker[T]`` 与「Type Bound」（后续会详谈）。总体思路就是这个方法只能采用「Value Classes」，如 Int 或我们自己的值类型。虽然这不是惯用的方法，但这展示了 Scala 的类型系统如何拥抱 java 的基本数据类型，把它们引入到真正的类型系统里面，而不是像 Java 一样，仅仅将它们作为一个分离的情况存在。
+
+## 5. 底类型 - Nothing 与 Null
+
+在 Scala 中，一切皆有类型…… 但你是否想过，当遇到一些非正常的情况，比如抛出异常的时候，类型推断是如何保持正常运转，推断出「sound」类型的。
+
+让我们通过以下的「if/else throw」的例子来一探究竟：
+```scala
+val thing: Int =
+  if (test)
+    42                             // : Int
+  else
+    throw new Exception("Whoops!") // : Nothing
+```
+
+正如你在注释里所看到的，if 块的返回类型是 ``Int``（很明显），else 代码块的类型是 ``Nothing``（有点意思）。推断器之所以能够推断 Thing 的类型将永远是 ``Int``，主要是 ``Nothing`` 类型的「底类型」性质在起作用。
+
+> 一个关于「底类型」如何运作的准确直觉是：``Nothing`` 继承了所有类型。
+
+……
+
+## 下一篇
+
+[Scala 类型的类型（二）](/page/scala-types-of-types/part-2)

@@ -18,5 +18,5 @@
 ……
 一年后的鸡年春节，我在老家看上了 120 寸的电影。  
 -
-![home theater](http://yison.me/assets/img/2017-03/home-theater.jpg)
+![home theater](/assets/img/2017-03/home-theater.jpg)
   <center>2017大年三十（苏启 摄）</center>

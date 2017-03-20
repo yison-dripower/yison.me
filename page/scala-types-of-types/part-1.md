@@ -193,7 +193,7 @@ Int
 TypeRef(TypeSymbol(final abstract class Int extends AnyVal))
 ```
 
-```verbose`` 参数在这里新增了一些信息，现在我们知道了 ``Int`` 是 一个 ``AnyVal``，后者是个特殊的用于表示值类型的 ``class``，它不能兼容 ``Null``。如果我们看 ``AnyVal`` 的源码，我们将发现：
+``verbose`` 参数在这里新增了一些信息，现在我们知道了 ``Int`` 是 一个 ``AnyVal``，后者是个特殊的用于表示值类型的 ``class``，它不能兼容 ``Null``。如果我们看 ``AnyVal`` 的源码，我们将发现：
 
 ```
 abstract class AnyVal extends Any with NotNull
@@ -203,7 +203,7 @@ abstract class AnyVal extends Any with NotNull
 
 回到主题，为什么上面 ``if`` 语句（两个逻辑分支的类型分别是 ``AnyVal`` 和 ``null``）的公共类型是 ``Any``，而不是其它。用一句话来总结就是：
 
-> Null 继承所有的 AnyRefs，而 Nothing 继承一切。
+> Null 继承所有的 AnyRefs，而 Nothing 继承了一切。
 
 由于 AnyVals （例如数字）跟 AnyRefs 并不在一个继承树中，一个数字与一个 ``null`` 值唯一的公共类型就是 ``Any`` ，这就解释了我们的例子。
 

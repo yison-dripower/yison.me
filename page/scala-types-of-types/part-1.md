@@ -213,7 +213,8 @@ Types visualized:
 Int  -> NotNull -> AnyVal -> [Any]
 Null            -> AnyRef -> [Any]
 
-infered type: Any an object```
+infered type: Any an object
+```
 
 ## 下一篇
 

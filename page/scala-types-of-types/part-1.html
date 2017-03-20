@@ -226,10 +226,13 @@ TypeRef(TypeSymbol(final abstract class Int extends AnyVal))
 <p>Null 继承所有的 AnyRefs，而 Nothing 继承一切。</p>
 </blockquote>
 <p>由于 AnyVals （例如数字）跟 AnyRefs 并不在一个继承树中，一个数字与一个 <code>null</code> 值唯一的公共类型就是 <code>Any</code> ，这就解释了我们的例子。</p>
-<p>```<br />
-Types visualized:</p>
-<p>Int  -&gt; NotNull -&gt; AnyVal -&gt; [Any]<br />
-Null            -&gt; AnyRef -&gt; [Any]</p>
-<p>infered type: Any an object```</p>
+<pre><code>Types visualized:
+
+Int  -&gt; NotNull -&gt; AnyVal -&gt; [Any]
+Null            -&gt; AnyRef -&gt; [Any]
+
+infered type: Any an object
+</code></pre>
+
 <h2 id="_3"><a name="user-content-_3" href="#_3" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>下一篇</h2>
 <p><a href="/page/scala-types-of-types/part-2">Scala 类型的类型（二）</a></p></article></body></html>

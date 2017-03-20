@@ -77,7 +77,7 @@ blockquote {
   background: #eee;
   margin: 0;
   padding: 10px 25px;
-  font-size: 12px;
+  font-size: 14px;
 }</style><title>part-1</title></head><body><article class="markdown-body"><h1 id="scala"><a name="user-content-scala" href="#scala" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Scala 类型的类型</h1>
 <hr />
 <h2 id="_1"><a name="user-content-_1" href="#_1" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>原文</h2>
@@ -216,14 +216,14 @@ Int
 TypeRef(TypeSymbol(final abstract class Int extends AnyVal))
 </code></pre>
 
-<p><code>`verbose</code> 参数在这里新增了一些信息，现在我们知道了 <code>Int</code> 是 一个 <code>AnyVal</code>，后者是个特殊的用于表示值类型的 <code>class</code>，它不能兼容 <code>Null</code>。如果我们看 <code>AnyVal</code> 的源码，我们将发现：</p>
+<p><code>verbose</code> 参数在这里新增了一些信息，现在我们知道了 <code>Int</code> 是 一个 <code>AnyVal</code>，后者是个特殊的用于表示值类型的 <code>class</code>，它不能兼容 <code>Null</code>。如果我们看 <code>AnyVal</code> 的源码，我们将发现：</p>
 <pre><code>abstract class AnyVal extends Any with NotNull
 </code></pre>
 
 <p>我之所以要讲是这里，是因为 <code>AnyVal</code> 的核心功能在这里通过类型很好地表示出来了。<strong>注意那个 <code>NotNull</code> 特质（trait）</strong>。</p>
 <p>回到主题，为什么上面 <code>if</code> 语句（两个逻辑分支的类型分别是 <code>AnyVal</code> 和 <code>null</code>）的公共类型是 <code>Any</code>，而不是其它。用一句话来总结就是：</p>
 <blockquote>
-<p>Null 继承所有的 AnyRefs，而 Nothing 继承一切。</p>
+<p>Null 继承所有的 AnyRefs，而 Nothing 继承了一切。</p>
 </blockquote>
 <p>由于 AnyVals （例如数字）跟 AnyRefs 并不在一个继承树中，一个数字与一个 <code>null</code> 值唯一的公共类型就是 <code>Any</code> ，这就解释了我们的例子。</p>
 <pre><code>Types visualized:

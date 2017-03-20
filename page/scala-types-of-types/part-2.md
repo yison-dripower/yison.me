@@ -8,10 +8,12 @@
 
 ## 目录
 
-- [6. object 类型]()
+- [6. 一个 object 的类型]()
 - [7. Scala 中的类型变量]()
 - [8. Refined Types (refinements)]()
 - [9. Package Object]()
 - [10. Type Alias]()
 
-## 6. object 类型
+## 6. 一个 object 类型
+
+

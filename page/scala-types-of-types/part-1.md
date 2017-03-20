@@ -145,7 +145,75 @@ val thing: Int =
 
 > 一个关于「底类型」如何运作的准确直觉是：``Nothing`` 继承了所有类型。
 
-……
+「类型推断」总是会寻找 ``if`` 语句两个逻辑分支的「共同类型」。因此如果 ``else`` 分支这里是一个继承所有类型的子类型，那么最终推断出来的结果自然会是第一个分支的类型。
+
+```
+Types visualized:
+
+           [Int] -> ... -> AnyVal -> Any
+Nothing -> [Int] -> ... -> AnyVal -> Any
+```
+
+同样的道理也适用于 Scala 中的第二个底类型 - ``Null``。
+
+```
+val thing: String =
+  if (test)
+    "Yay!"  // : String
+  else
+  	null    // : Null
+```
+
+``thing`` 的类型是预期的 ``String``。 ``Null`` 遵循着跟 ``Nothing`` 几乎一样的规则。我将通过这个例子先探讨下「类型推断」，AnyVals 与 AnyRefs 之间的区别。
+
+```
+Types visualized:
+
+        [String] -> AnyRef -> Any
+Null -> [String] -> AnyRef -> Any
+
+infered type: String
+```
+
+让我们考虑下 ``Int`` 及其他不能兼容 ``Null`` 值的基本数据类型。我们在 REPL 中使用 ``:type`` 命令来调查这个情况（这样可以返回一个表达式的类型）。
+
+```
+scala> :type if (false) 23 else null
+Any
+```
+
+这跟上面一个分支对象为 ``String`` 类型的例子不同。因为``Null`` 不像 ``Nothing`` 一样继承任何类型，我们来详细研究一下这里的类型。让我们再次使用 ``:type`` 命令来看看 ``Int`` 到底继承了什么：
+
+```
+scala> :type -v 12
+// Type signature
+Int
+
+// Internal Type structure
+TypeRef(TypeSymbol(final abstract class Int extends AnyVal))
+```
+
+```verbose`` 参数在这里新增了一些信息，现在我们知道了 ``Int`` 是 一个 ``AnyVal``，后者是个特殊的用于表示值类型的 ``class``，它不能兼容 ``Null``。如果我们看 ``AnyVal`` 的源码，我们将发现：
+
+```
+abstract class AnyVal extends Any with NotNull
+```
+
+我之所以要讲是这里，是因为 ``AnyVal`` 的核心功能在这里通过类型很好地表示出来了。**注意那个 ``NotNull`` 特质（trait）**。
+
+回到主题，为什么上面 ``if`` 语句（两个逻辑分支的类型分别是 ``AnyVal`` 和 ``null``）的公共类型是 ``Any``，而不是其它。用一句话来总结就是：
+
+> Null 继承所有的 AnyRefs，而 Nothing 继承一切。
+
+由于 AnyVals （例如数字）跟 AnyRefs 并不在一个继承树中，一个数字与一个 ``null`` 值唯一的公共类型就是 ``Any`` ，这就解释了我们的例子。
+
+```
+Types visualized:
+
+Int  -> NotNull -> AnyVal -> [Any]
+Null            -> AnyRef -> [Any]
+
+infered type: Any an object```
 
 ## 下一篇
 

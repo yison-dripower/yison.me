@@ -178,6 +178,58 @@ check(new Object) // -&gt; AnyRef = fails to compile
 <blockquote>
 <p>一个关于「底类型」如何运作的准确直觉是：<code>Nothing</code> 继承了所有类型。</p>
 </blockquote>
-<p>……</p>
+<p>「类型推断」总是会寻找 <code>if</code> 语句两个逻辑分支的「共同类型」。因此如果 <code>else</code> 分支这里是一个继承所有类型的子类型，那么最终推断出来的结果自然会是第一个分支的类型。</p>
+<pre><code>Types visualized:
+
+           [Int] -&gt; ... -&gt; AnyVal -&gt; Any
+Nothing -&gt; [Int] -&gt; ... -&gt; AnyVal -&gt; Any
+</code></pre>
+
+<p>同样的道理也适用于 Scala 中的第二个底类型 - <code>Null</code>。</p>
+<pre><code>val thing: String =
+  if (test)
+    &quot;Yay!&quot;  // : String
+  else
+    null    // : Null
+</code></pre>
+
+<p><code>thing</code> 的类型是预期的 <code>String</code>。 <code>Null</code> 遵循着跟 <code>Nothing</code> 几乎一样的规则。我将通过这个例子先探讨下「类型推断」，AnyVals 与 AnyRefs 之间的区别。</p>
+<pre><code>Types visualized:
+
+        [String] -&gt; AnyRef -&gt; Any
+Null -&gt; [String] -&gt; AnyRef -&gt; Any
+
+infered type: String
+</code></pre>
+
+<p>让我们考虑下 <code>Int</code> 及其他不能兼容 <code>Null</code> 值的基本数据类型。我们在 REPL 中使用 <code>:type</code> 命令来调查这个情况（这样可以返回一个表达式的类型）。</p>
+<pre><code>scala&gt; :type if (false) 23 else null
+Any
+</code></pre>
+
+<p>这跟上面一个分支对象为 <code>String</code> 类型的例子不同。因为<code>Null</code> 不像 <code>Nothing</code> 一样继承任何类型，我们来详细研究一下这里的类型。让我们再次使用 <code>:type</code> 命令来看看 <code>Int</code> 到底继承了什么：</p>
+<pre><code>scala&gt; :type -v 12
+// Type signature
+Int
+
+// Internal Type structure
+TypeRef(TypeSymbol(final abstract class Int extends AnyVal))
+</code></pre>
+
+<p><code>`verbose</code> 参数在这里新增了一些信息，现在我们知道了 <code>Int</code> 是 一个 <code>AnyVal</code>，后者是个特殊的用于表示值类型的 <code>class</code>，它不能兼容 <code>Null</code>。如果我们看 <code>AnyVal</code> 的源码，我们将发现：</p>
+<pre><code>abstract class AnyVal extends Any with NotNull
+</code></pre>
+
+<p>我之所以要讲是这里，是因为 <code>AnyVal</code> 的核心功能在这里通过类型很好地表示出来了。<strong>注意那个 <code>NotNull</code> 特质（trait）</strong>。</p>
+<p>回到主题，为什么上面 <code>if</code> 语句（两个逻辑分支的类型分别是 <code>AnyVal</code> 和 <code>null</code>）的公共类型是 <code>Any</code>，而不是其它。用一句话来总结就是：</p>
+<blockquote>
+<p>Null 继承所有的 AnyRefs，而 Nothing 继承一切。</p>
+</blockquote>
+<p>由于 AnyVals （例如数字）跟 AnyRefs 并不在一个继承树中，一个数字与一个 <code>null</code> 值唯一的公共类型就是 <code>Any</code> ，这就解释了我们的例子。</p>
+<p>```<br />
+Types visualized:</p>
+<p>Int  -&gt; NotNull -&gt; AnyVal -&gt; [Any]<br />
+Null            -&gt; AnyRef -&gt; [Any]</p>
+<p>infered type: Any an object```</p>
 <h2 id="_3"><a name="user-content-_3" href="#_3" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>下一篇</h2>
 <p><a href="/page/scala-types-of-types/part-2">Scala 类型的类型（二）</a></p></article></body></html>

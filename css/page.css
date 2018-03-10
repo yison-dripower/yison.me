@@ -29,6 +29,10 @@ article {
 .markdown-body {
 	font: 300 100%/1.75 'Helvetica Neue', Helvetica, 'Lantinghei SC', 'Hiragino Sans GB', sans-serif;
 	color: #505050;
+  letter-spacing: 1px;
+}
+.markdown-body img {
+  max-width: 100%;
 }
 h1 {
     color: #ED1F24;
@@ -47,7 +51,31 @@ center a {
 }
 hr {
 	border: 0;
-	background-color: #e0e0e0;
+	background-color: #f8f8f8;
 	height: 1px;
 	margin-bottom: 60px;
+}
+code {
+  margin: 0 2px;
+  padding: 0px 5px;
+  border: 1px solid #ddd;
+  background-color: #eee;
+  border-radius: 3px;
+}
+pre code {
+  margin: 0;
+  display: block;
+  padding: 15px;
+  border: none;
+  border-radius: 0;
+  overflow-x: scroll;
+  letter-spacing: 0;
+  border: 1px solid #ddd;
+}
+blockquote {
+  border-left: 4px solid #ED1F24;
+  background: #eee;
+  margin: 0;
+  padding: 10px 25px;
+  font-size: 14px;
 }

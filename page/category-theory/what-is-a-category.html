@@ -1,0 +1,121 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>html {
+	background: #ddd;
+}
+body {
+	outline: none;
+	border: none;
+	font: 300 100%/1.75 'Helvetica Neue', Helvetica, 'Lantinghei SC', 'Hiragino Sans GB', sans-serif;
+}
+a {
+	text-decoration: none;
+	color: #3466CC;
+	cursor: pointer;
+}
+a:hover {
+    color: #ed282d;
+    transition: 0.1s;
+}
+article {
+	margin:0 auto;
+	max-width: 620px;
+	padding: 60px 80px;
+    -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, .12);
+    -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, .12);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .12);
+    background: #fff;
+    margin-top: 30px;
+    border-radius: 3px;
+}
+.markdown-body {
+	font: 300 100%/1.75 'Helvetica Neue', Helvetica, 'Lantinghei SC', 'Hiragino Sans GB', sans-serif;
+	color: #505050;
+  letter-spacing: 1px;
+}
+.markdown-body img {
+  max-width: 100%;
+}
+h1 {
+    color: #ED1F24;
+    line-height: 36px;
+    margin: 20px 0;
+    text-align: center;
+	font-weight: normal;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 30px;
+}
+center {
+	color: #999;
+}
+center a {
+	color: #444;
+}
+hr {
+	border: 0;
+	background-color: #f8f8f8;
+	height: 1px;
+	margin-bottom: 60px;
+}
+code {
+  margin: 0 2px;
+  padding: 0px 5px;
+  border: 1px solid #ddd;
+  background-color: #eee;
+  border-radius: 3px;
+}
+pre code {
+  margin: 0;
+  display: block;
+  padding: 15px;
+  border: none;
+  border-radius: 0;
+  overflow-x: scroll;
+  letter-spacing: 0;
+}</style><title>what-is-a-category</title></head><body><article class="markdown-body"><h1 id="-"><a name="user-content--" href="#-" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>范畴 - 组合的本质</h1>
+<hr />
+<h2 id="part-11"><a name="user-content-part-11" href="#part-11" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Part 1.1</h2>
+<ul>
+<li><a href="https://bartoszmilewski.com/2014/11/04/category-the-essence-of-composition/">Category: The Essence of Composition</a></li>
+<li><a href="https://www.youtube.com/watch?v=p54Hd7AmVFU&amp;index=2&amp;list=PLbgaMIhjbmEnaH_LTkxLI7FMa2HsnawM_">Category Theory 1.2: What is a category?</a></li>
+</ul>
+<h2 id="_1"><a name="user-content-_1" href="#_1" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>目录</h2>
+<ul>
+<li><a href="#_2">什么是范畴？</a></li>
+<li><a href="#_5">类</a></li>
+<li><a href="#_6">态射复合</a></li>
+<li><a href="#_7">复合的性质</a></li>
+</ul>
+<h2 id="_2"><a name="user-content-_2" href="#_2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>什么是范畴？</h2>
+<p>在 Milewski 看来，「范畴」是一个很简单的概念，但是如果要准确地解释清它是什么，似乎也不是一件容易的事。</p>
+<h3 id="_3"><a name="user-content-_3" href="#_3" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>简单理解：</h3>
+<pre><code>「一类对象」及「该类对象之间的箭头」构成了一个范畴。
+</code></pre>
+
+<ul>
+<li>范畴跟集合、关系都不是一个层面的概念，前者可以包含后两者；</li>
+<li>范畴论中对象可以看成原子性的点，忽略内部细节，重点关注对象之间的箭头，即「态射」；</li>
+<li>态射与态射之间是可组合的，如下图 A → C = A → B + B → C</li>
+</ul>
+<p><img alt="pig arrow" src="http://yison.me/assets/img/2017-03/pig-arrow.jpg" /></p>
+<p>（注意！此图并非一个完整的范畴，因为它没有单位态射，详见下文。）</p>
+<h3 id="_4"><a name="user-content-_4" href="#_4" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>准确定义：</h3>
+<pre><code>一个完整的范畴包含：  
+
+1. 一个由对象所构成的类；
+2. 对象与对象之间的态射；
+3. 对任三个对象，它们之间的态射复合需满足「结合律」；
+4. 对任一对象，都存在「单位态射」。
+</code></pre>
+
+<p>有点迷？下面逐一解释。</p>
+<h2 id="_5"><a name="user-content-_5" href="#_5" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>类</h2>
+<p>类是造成「范畴」不容易被准确理解的原因之一。</p>
+<ul>
+<li>组成范畴的一类对象并不一定就是「集合」。</li>
+<li>「类」是为了解决「集合论」缺陷而创造的概念，参见「<a href="https://www.zhihu.com/question/28422649">罗素悖论</a>」。</li>
+<li>为了便于理解，一般情况下，可以近似认为「一个范畴包含一个集合」。</li>
+</ul>
+<h2 id="_6"><a name="user-content-_6" href="#_6" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>态射复合</h2>
+<h2 id="_7"><a name="user-content-_7" href="#_7" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>复合的性质</h2>
+<p>在任何范畴中，复合必须满足两个非常重要的性质。</p>
+<h3 id="_8"><a name="user-content-_8" href="#_8" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>结合律</h3>
+<h3 id="_9"><a name="user-content-_9" href="#_9" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>单位态射</h3></article></body></html>
